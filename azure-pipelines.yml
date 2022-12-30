@@ -1,8 +1,4 @@
 # Maven
-- task: CopyFiles@2
-  inputs:
-    Contents: '**/.war'
-    TargetFolder: '$(build.artifactstagingdirectory)'
 # Build your Java project and run tests with Apache Maven.
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
@@ -14,19 +10,18 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+
+  
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'warfile'
+    publishLocation: 'Container'
+   
+
 - task: Maven@3
   inputs:
-  
-- task: PublishBuildArtifacts@1
-  inputs:
-- task: PublishBuildArtifacts@1
-  inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'warfile'
-    publishLocation: 'Container'
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-    ArtifactName: 'warfile'
-    publishLocation: 'Container'
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
@@ -35,3 +30,8 @@ steps:
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'package'
+    
+- task: CopyFiles@2
+  inputs:
+    Contents: '**/.war'
+    TargetFolder: '$(build.artifactstagingdirectory)'
